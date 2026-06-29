@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">AppFenixxx</string>
+    <string name="original_text">Texto Original</string>
+    <string name="translated_text">Texto Traducido</string>
+    <string name="pause">Pausar</string>
+    <string name="resume">Reanudar</string>
+    <string name="error_text_too_long">El texto es demasiado largo.</string>
+    <string name="error_translation_failed">Error en la traducción.</string>
+    <string-array name="languages_array">
+        <item>Francés</item>
+        <item>Inglés</item>
+        <item>Italiano</item>
+        <item>Portugués</item>
+        <item>Alemán</item>
+    </string-array>
+</resources>
