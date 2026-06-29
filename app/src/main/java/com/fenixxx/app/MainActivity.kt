@@ -16,12 +16,14 @@ import okhttp3.Request
 import org.json.JSONObject
 import java.io.IOException
 import java.util.Locale
+import androidx.core.content.ContextCompat
+import android.content.ClipboardManager
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
-    private lateinit var clipboardManager: android.content.ClipboardManager
+    private lateinit var clipboardManager: ClipboardManager
     private lateinit var textToSpeech: TextToSpeech
     private var isMonitoring = true
 
@@ -39,13 +41,14 @@ class MainActivity : AppCompatActivity() {
         setupSpinner()
         setupButton()
         setupClipboardMonitor()
+        updateUI()
     }
 
     private fun setupSpinner() {
         ArrayAdapter.createFromResource(
             this,
             R.array.languages_array,
-            R.layout.spinner_item
+            android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinnerLanguage.adapter = adapter
@@ -60,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupClipboardMonitor() {
-        clipboardManager = getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager
+        clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
     }
 
     override fun onResume() {
@@ -75,10 +78,10 @@ class MainActivity : AppCompatActivity() {
         clipboardManager.removePrimaryClipChangedListener(clipListener)
     }
 
-    private val clipListener = android.content.ClipboardManager.OnPrimaryClipChangedListener {
+    private val clipListener = ClipboardManager.OnPrimaryClipChangedListener {
         if (isMonitoring) {
             val item = clipboardManager.primaryClip?.getItemAt(0)
-            val text = item?.text.toString().trim()
+            val text = item?.text?.toString()?.trim().orEmpty()
             if (text.isNotEmpty() && text != viewModel.lastTranslatedText) {
                 translateText(text)
             }
@@ -118,7 +121,8 @@ class MainActivity : AppCompatActivity() {
     private fun updateUI() {
         binding.buttonToggle.text = if (isMonitoring) getString(R.string.pause) else getString(R.string.resume)
         binding.indicatorStatus.setBackgroundColor(
-            if (isMonitoring) getColor(R.color.green) else getColor(R.color.red)
+            if (isMonitoring) ContextCompat.getColor(this, R.color.green)
+            else ContextCompat.getColor(this, R.color.red)
         )
     }
 
